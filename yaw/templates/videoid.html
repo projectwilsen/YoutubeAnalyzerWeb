@@ -7,14 +7,10 @@
     <title>Document</title>
 </head>
 <body>
+    {% block content %} 
 
-    <form action = "findcomment">
-    Channel ID : <input type = "text" name = "channelid"><br>
-    <br>
-    Youtube API Key: <input type = "text" name = "youtubeapikey"><br>
-    <br>
-    <input type = "submit">
-    </form>
-    
+    {{result}} 
+
+    {% endblock %} 
 </body>
 </html>
