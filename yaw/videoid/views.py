@@ -10,15 +10,16 @@ from maincodes import get_video_ids, comment_threads
 def index(request):
     return render(request, 'form.html')
 
-def findvideoid(request):
-    channelid = request.GET["channelid"]
-    youtube = build("youtube", "v3", developerKey=request.GET["youtubeapikey"])
-    result = get_video_ids(youtube, channelid)
-    return render(request, 'videoid.html', {"result":result})
-
 def findcomment(request):
-    channelid = request.GET["channelid"]
-    youtube = build("youtube", "v3", developerKey=request.GET["youtubeapikey"])
-    videoid = get_video_ids(youtube, channelid)
-    result = comment_threads(youtube, videoID = videoid[2], channelID = channelid, to_csv = True)
-    return render(request, 'comment.html', {"result":result})
+    if request.method == "POST":
+        channelid = request.POST["channelid"]
+        youtube = build("youtube", "v3", developerKey=request.POST["youtubeapikey"])
+        if request.POST["jenis"] == "videoId":
+            result = get_video_ids(youtube, channelid)
+        else:
+            videoid = get_video_ids(youtube, channelid)
+            result = comment_threads(youtube, videoID = videoid[2], channelID = channelid, to_csv = True)
+        return render(request, 'form.html', {"result":result[0:5], "channelid" : channelid, "youtubeapikey": request.POST["youtubeapikey"], "jenis":request.POST["jenis"] })
+    
+    else:
+        return render(request,"form.html")
