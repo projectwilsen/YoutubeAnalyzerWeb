@@ -26,6 +26,11 @@ def process_comments(response_items, csv_output=False):
             comment['snippet']['commentId'] = res['snippet']['topLevelComment']['id']
 
             comments.append(comment['snippet'])
+        
+    keytoremove = ['textDisplay','authorProfileImageUrl','authorChannelUrl','authorChannelId','canRate','viewerRating','likeCount','updatedAt','parentId']
+    for i in comments:
+        for y in keytoremove:
+            del i[y]
 
     if csv_output:
          make_csv(comments)
