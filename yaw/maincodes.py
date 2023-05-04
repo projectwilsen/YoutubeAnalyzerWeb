@@ -70,11 +70,14 @@ def make_csv(comments, channelID=None, videoID=None):
     header = comments[0].keys()
 
     if channelID and videoID:
-        filename = f'{PATH}comments_{channelID}_{videoID}_{today}.csv'
+        #filename = f'{PATH}comments_{channelID}_{videoID}_{today}.csv'
+        filename = f'{PATH}comments.csv'
     elif channelID:
-        filename = f'{PATH}comments_{channelID}_{today}.csv'
+        #filename = f'{PATH}comments_{channelID}_{today}.csv'
+        filename = f'{PATH}comments.csv'
     else:
-        filename = f'{PATH}comments_{today}.csv'
+        #filename = f'{PATH}comments_{today}.csv'
+        filename = f'{PATH}comments.csv'
 
     with open(filename, 'w', encoding='utf8', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=header)
@@ -82,6 +85,7 @@ def make_csv(comments, channelID=None, videoID=None):
         writer.writerows(comments)  
     
     #pushtomodel(filename)
+    return filename
 
 
 def pushtomodel(filename):

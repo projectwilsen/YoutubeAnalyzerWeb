@@ -26,3 +26,14 @@ form{
     margin:1px;
     padding:1px;
 }
+.download-btn{
+    background-color: DodgerBlue;
+    color: white;
+    padding: 10px 10px;
+    text-decoration: none;
+    border-radius:5px;
+}
+
+.download-btn:hover {
+    background-color: RoyalBlue;
+  }
