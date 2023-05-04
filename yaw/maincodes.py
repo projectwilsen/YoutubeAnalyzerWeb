@@ -87,7 +87,7 @@ def make_csv(comments, channelID=None, videoID=None):
     #         item.append(channelID)
 
     
-    #pushtomodel(filename)
+    pushtomodel(filename)
 
 
 def pushtomodel(filename):
@@ -95,12 +95,12 @@ def pushtomodel(filename):
         reader = csv.DictReader(csvfile)
         for row in reader:
             # Check if the row already exists
-            if Comment.objects.filter(comment_id = row['commentId']).exists(): 
+            if Comment.objects.filter(comment_id = row['comment_id']).exists(): 
                 continue
             
-            instance = Comment(video_id = row['videoId'], comment_id = row['commentId'], 
-                               date = row['publishedAt'],author = row['authorDisplayName'], 
-                               comment_text = row['textOriginal'])
+            instance = Comment(channel_id = row['channel_id'], video_id = row['video_id'],
+                               comment_id = row['comment_id'], date = row['date'],
+                               author = row['author'], comment_text = row['comment_text'])
             instance.save()
 
 
