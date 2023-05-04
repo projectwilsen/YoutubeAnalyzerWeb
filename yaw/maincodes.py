@@ -80,14 +80,8 @@ def make_csv(comments, channelID=None, videoID=None):
         writer = csv.DictWriter(f, fieldnames=header)
         writer.writeheader()
         writer.writerows(comments)  
-
-    #     channel = next(writer)
-    #     channel.append('channel_id')
-    #     for item in writer:
-    #         item.append(channelID)
-
     
-    pushtomodel(filename)
+    #pushtomodel(filename)
 
 
 def pushtomodel(filename):

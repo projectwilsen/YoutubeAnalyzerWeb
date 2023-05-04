@@ -5,81 +5,85 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <title>Document</title>
+    <script src="https://kit.fontawesome.com/6edfa3b2fe.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link href= "{% static 'styles.css' %}" rel="stylesheet" type="text/css" /> 
+    <title>Youtube Comment Scraper</title>
 </head>
-<body>
+<div id = "container">
+    <h1>Youtube Comment Scraper</h1>
 
-    <form action = "getoutput" method = "POST">
-        {% csrf_token %}
-    Channel ID : <input type = "text" name = "channelid" value = "{{channelid}}"><br>
-    <br>
-    Youtube API Key: <input type = "text" name = "youtubeapikey" value = "{{youtubeapikey}}"><br>
-    <br>
-    Get: 
-    <select name="jenis" id="jenis">
-        <option value="videoId">Video ID</option>
-        <option value="textDisplay" selected>Comment</option>
-    </select>
-    <br>
-    <br>
-    <input type = "submit">
+    <form action = "getoutput" method = "POST" id = "form">
+    {% csrf_token %}
+        <p>Channel ID : <input type = "text" name = "channelid" value = "{{channelid}}"></p>
+        <p>Youtube API Key: <input type = "text" name = "youtubeapikey" value = "{{youtubeapikey}}"></p>
+        <p>
+            Get: 
+            <select name="jenis" id="jenis">
+                <option value="videoId">Video ID</option>
+                <option value="textDisplay" selected>Comment</option>
+            </select>
+        </p>
+        <p><input type = "submit"></p>
     </form>
-    <br>
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">No</th>
-
-            {% if jenis == "videoId" %}
-
-            <th scope="col">Video ID</th>
-
-            {% else %}
-
-           
-            <th scope="col">Channel ID</th>
-            <th scope="col">Video ID</th>
-            <th scope="col">Comment ID</th>
-            <th scope="col">Date</th>
-            <th scope="col">Author</th>
-            <th scope="col">Comment Text</th>
-
-            {% endif %}
-           
-          </tr>
-        </thead>
-        <tbody>
-            
-            {% for i  in result %}
+    
+    <main>
+        <table class="table" > 
+            <thead>
             <tr>
-              <th scope="row">{{ forloop.counter }}</th>
-             
+                <th scope="col" >No</th>
+
                 {% if jenis == "videoId" %}
-                
-                <td>{{i}}</td>
+
+                <th scope="col">Video ID</th>
 
                 {% else %}
-                
+
             
-                <td>{{i.channel_id}}</td>
-                <td>{{i.video_id}}</td>
-                <td>{{i.comment_id}}</td>
-                <td>{{i.date}}</td>
-                <td>{{i.author}}</td>
-                <td>{{i.comment_text}}</td>
+                <th scope="col">Channel ID</th>
+                <th scope="col">Video ID</div></th>
+                <th scope="col">Comment ID</div></th>
+                <th scope="col">Date</th>
+                <th scope="col">Author</th>
+                <th scope="col">Comment Text</th>
 
                 {% endif %}
+            
             </tr>
+            </thead>
+            <tbody>
+                
+                {% for i  in result %}
+                <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                
+                    {% if jenis == "videoId" %}
+                    
+                    <td>{{i}}</td>
 
-            {% endfor %}
-        
-        </tbody>
-    </table>
+                    {% else %}
+                    
+                
+                    <td>{{i.channel_id}}</td>
+                    <td>{{i.video_id}}</td>
+                    <td>{{i.comment_id}}</td>
+                    <td>{{i.date}}</td>
+                    <td>{{i.author}}</td>
+                    <td>{{i.comment_text}}</td>
+
+                    {% endif %}
+                </tr>
+
+                {% endfor %}
+            
+            </tbody>
+        </table>
+    </main>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     
-</body>
+</div>
 
 </html>
