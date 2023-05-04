@@ -3,6 +3,7 @@ import csv
 from datetime import datetime as dt
 from urllib import response
 from googleapiclient.discovery import build
+from videoid.models import Comment
 
 
 today = dt.today().strftime('%d-%m-%Y')
@@ -32,14 +33,36 @@ def process_comments(response_items, csv_output=False):
         for y in keytoremove:
             del i[y]
 
+    new_comments = []
+    for original_dict in comments:
+        new_dict = {
+            'video_id': original_dict['videoId'],
+            'comment_id': original_dict['commentId'],
+            'date': original_dict['publishedAt'],
+            'author': original_dict['authorDisplayName'],
+            'comment_text': original_dict['textOriginal']
+        }
+        new_comments.append(new_dict)
+
     if csv_output:
-         make_csv(comments)
+         make_csv(new_comments)
     
-    print(f'Finished processing {len(comments)} comments.')
-    return comments
+    print(f'Finished processing {len(new_comments)} comments.')
+
+    return new_comments
 
 
 def make_csv(comments, channelID=None, videoID=None):
+
+    new_key = 'channel_id'
+    new_value = channelID
+
+    for dictionary in comments:
+        new_dict = {new_key: new_value}
+        new_dict.update(dictionary)
+        dictionary.clear()
+        dictionary.update(new_dict)
+
     # Handle 0 comments issue
     if len(comments) == 0:
         return
@@ -56,7 +79,30 @@ def make_csv(comments, channelID=None, videoID=None):
     with open(filename, 'w', encoding='utf8', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=header)
         writer.writeheader()
-        writer.writerows(comments)
+        writer.writerows(comments)  
+
+    #     channel = next(writer)
+    #     channel.append('channel_id')
+    #     for item in writer:
+    #         item.append(channelID)
+
+    
+    #pushtomodel(filename)
+
+
+def pushtomodel(filename):
+    with open(filename, newline='',encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            # Check if the row already exists
+            if Comment.objects.filter(comment_id = row['commentId']).exists(): 
+                continue
+            
+            instance = Comment(video_id = row['videoId'], comment_id = row['commentId'], 
+                               date = row['publishedAt'],author = row['authorDisplayName'], 
+                               comment_text = row['textOriginal'])
+            instance.save()
+
 
 scraped_videos = {}
 
@@ -211,7 +257,7 @@ def comment_threads(youtube, videoID, channelID=None, to_csv=False):
             pageToken=response['nextPageToken']
         )
         response = request.execute()
-        comments_list.extend(process_comments(response['items']))
+        comments_list.extend(process_comments(response['items'])) 
     
     print(f"Finished fetching comments for {videoID}. {len(comments_list)} comments found.")
     

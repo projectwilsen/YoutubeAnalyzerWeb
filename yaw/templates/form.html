@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <form action = "findcomment" method = "POST">
+    <form action = "getoutput" method = "POST">
         {% csrf_token %}
     Channel ID : <input type = "text" name = "channelid" value = "{{channelid}}"><br>
     <br>
@@ -28,7 +28,7 @@
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">No</th>
 
             {% if jenis == "videoId" %}
 
@@ -36,6 +36,8 @@
 
             {% else %}
 
+           
+            <th scope="col">Channel ID</th>
             <th scope="col">Video ID</th>
             <th scope="col">Comment ID</th>
             <th scope="col">Date</th>
@@ -58,11 +60,13 @@
 
                 {% else %}
                 
-                <td>{{i.videoId}}</td>
-                <td>{{i.commentId}}</td>
-                <td>{{i.publishedAt}}</td>
-                <td>{{i.authorDisplayName}}</td>
-                <td>{{i.textOriginal}}</td>
+            
+                <td>{{i.channel_id}}</td>
+                <td>{{i.video_id}}</td>
+                <td>{{i.comment_id}}</td>
+                <td>{{i.date}}</td>
+                <td>{{i.author}}</td>
+                <td>{{i.comment_text}}</td>
 
                 {% endif %}
             </tr>

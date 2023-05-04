@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('',views.index, name ="index"),
-    path('findcomment',views.findcomment, name = "findcomment")
+    path('getoutput',views.getoutput, name = "getoutput")
 ]
