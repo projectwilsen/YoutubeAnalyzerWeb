@@ -4,7 +4,7 @@ from datetime import datetime as dt
 from urllib import response
 from googleapiclient.discovery import build
 from videoid.models import Comment
-
+from textblob_de import TextBlobDE as TextBlob
 
 today = dt.today().strftime('%d-%m-%Y')
 PATH = 'commentsFolder/'
@@ -48,7 +48,7 @@ def process_comments(response_items, csv_output=False):
          make_csv(new_comments)
     
     print(f'Finished processing {len(new_comments)} comments.')
-
+    print(new_comments)
     return new_comments
 
 
@@ -62,6 +62,25 @@ def make_csv(comments, channelID=None, videoID=None):
         new_dict.update(dictionary)
         dictionary.clear()
         dictionary.update(new_dict)
+    
+    def sentiment(i):
+        blob = TextBlob(i)
+        a = blob.sentiment
+        score = int(a[0])
+        if score == 0:
+            sentiment = 'neutral'
+        elif score > 0: 
+            sentiment = 'positive'
+        else:
+            sentiment = 'negative'
+
+        return sentiment
+    
+    for comment in comments:
+        if type(comment['comment_text']) == 'float':
+            comment['sentiment'] == 'no sentiment for numerical values'
+        else:
+            comment['sentiment'] = sentiment(comment['comment_text'])
 
     # Handle 0 comments issue
     if len(comments) == 0:
