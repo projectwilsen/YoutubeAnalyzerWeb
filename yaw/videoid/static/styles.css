@@ -36,4 +36,9 @@ form{
 
 .download-btn:hover {
     background-color: RoyalBlue;
-  }
+}
+
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
