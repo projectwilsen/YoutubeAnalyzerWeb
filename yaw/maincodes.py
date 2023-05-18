@@ -5,6 +5,8 @@ from urllib import response
 from googleapiclient.discovery import build
 from videoid.models import Comment
 from textblob_de import TextBlobDE as TextBlob
+import nltk
+nltk.download('punkt')
 
 today = dt.today().strftime('%d-%m-%Y')
 PATH = 'commentsFolder/'
