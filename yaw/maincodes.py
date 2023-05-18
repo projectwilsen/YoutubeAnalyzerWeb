@@ -9,7 +9,7 @@ from textblob_de import TextBlobDE as TextBlob
 today = dt.today().strftime('%d-%m-%Y')
 PATH = 'commentsFolder/'
 
-def process_comments(response_items, csv_output=False):
+def process_comments(response_items, channelID = None, csv_output=False):
     comments = []
 
     for res in response_items:
@@ -44,25 +44,15 @@ def process_comments(response_items, csv_output=False):
         }
         new_comments.append(new_dict)
 
-    if csv_output:
-         make_csv(new_comments)
-    
-    print(f'Finished processing {len(new_comments)} comments.')
-    print(new_comments)
-    return new_comments
-
-
-def make_csv(comments, channelID=None, videoID=None):
-
     new_key = 'channel_id'
     new_value = channelID
 
-    for dictionary in comments:
+    for dictionary in new_comments:
         new_dict = {new_key: new_value}
         new_dict.update(dictionary)
         dictionary.clear()
         dictionary.update(new_dict)
-    
+
     def sentiment(i):
         blob = TextBlob(i)
         a = blob.sentiment
@@ -76,11 +66,22 @@ def make_csv(comments, channelID=None, videoID=None):
 
         return sentiment
     
-    for comment in comments:
+    for comment in new_comments:
         if type(comment['comment_text']) == 'float':
             comment['sentiment'] == 'no sentiment for numerical values'
         else:
             comment['sentiment'] = sentiment(comment['comment_text'])
+
+    if csv_output:
+         make_csv(new_comments)
+    
+    print(f'Finished processing {len(new_comments)} comments.')
+    print(new_comments[0])
+    return new_comments
+
+
+def make_csv(comments, channelID=None, videoID=None):
+
 
     # Handle 0 comments issue
     if len(comments) == 0:
@@ -264,7 +265,7 @@ def comment_threads(youtube, videoID, channelID=None, to_csv=False):
             scraped_videos['error_ids'] = [videoID]
         return
 
-    comments_list.extend(process_comments(response['items']))
+    comments_list.extend(process_comments(response['items'],channelID))
 
     # if there is nextPageToken, then keep calling the API
     while response.get('nextPageToken', None):
@@ -274,7 +275,7 @@ def comment_threads(youtube, videoID, channelID=None, to_csv=False):
             pageToken=response['nextPageToken']
         )
         response = request.execute()
-        comments_list.extend(process_comments(response['items'])) 
+        comments_list.extend(process_comments(response['items'],channelID)) 
     
     print(f"Finished fetching comments for {videoID}. {len(comments_list)} comments found.")
     
