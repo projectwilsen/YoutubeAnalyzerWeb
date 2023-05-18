@@ -18,7 +18,7 @@ def getoutput(request):
             result = get_video_ids(youtube, channelid)
         else:
             videoid = get_video_ids(youtube, channelid)
-            result = comment_threads(youtube, videoID = videoid[1], channelID = channelid, to_csv = True)
+            result = comment_threads(youtube, videoID = videoid[1], channelID = channelid, to_csv = False)
         return render(request, 'form.html', {"result":result[0:5], "channelid" : channelid, "youtubeapikey": request.POST["youtubeapikey"], "jenis":request.POST["jenis"] })
     
     else:
