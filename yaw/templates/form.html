@@ -28,16 +28,14 @@
         </p>
         <p><input type = "submit"></p>
         
+    </form>
+
+    <form action = "download" method = "POST" id = "downloadform">
+        {% csrf_token %}
         <p><input type="hidden" name="download" value="true">
             <button type="submit">Download CSV</button>
         </p>
-        
     </form>
-
-    <p><a href="{{MEDIA_URL}}comments.csv" download= "youtubecomment" class="download-btn">Download
-        <i class="fa fa-download"></i>
-    </a></p>
-
 
     <main>
         <table class="table table-bordered" > 

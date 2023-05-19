@@ -80,7 +80,6 @@ def process_comments(response_items, channelID = None, csv_output=False):
          make_csv(new_comments)
     
     print(f'Finished processing {len(new_comments)} comments.')
-    print(new_comments[0])
     return new_comments
 
 
@@ -310,5 +309,5 @@ def comment_threads(youtube, videoID, channelID=None, to_csv=False):
         scraped_videos[channelID].append(videoID)
     else:
         scraped_videos[channelID] = [videoID]
-    
+
     return comments_list
