@@ -7,6 +7,8 @@ from videoid.models import Comment
 from textblob_de import TextBlobDE as TextBlob
 import nltk
 nltk.download('punkt')
+from django.http import HttpResponse
+import io
 
 today = dt.today().strftime('%d-%m-%Y')
 PATH = 'commentsFolder/'
@@ -84,30 +86,42 @@ def process_comments(response_items, channelID = None, csv_output=False):
 
 def make_csv(comments, channelID=None, videoID=None):
 
-
-    # Handle 0 comments issue
-    if len(comments) == 0:
-        return
-
     header = comments[0].keys()
 
-    if channelID and videoID:
-        #filename = f'{PATH}comments_{channelID}_{videoID}_{today}.csv'
-        filename = f'{PATH}comments.csv'
-    elif channelID:
-        #filename = f'{PATH}comments_{channelID}_{today}.csv'
-        filename = f'{PATH}comments.csv'
-    else:
-        #filename = f'{PATH}comments_{today}.csv'
-        filename = f'{PATH}comments.csv'
-
-    with open(filename, 'w', encoding='utf8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=header)
-        writer.writeheader()
-        writer.writerows(comments)  
+    buffer = io.StringIO()
+    wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
+    wr.writeheader()
+    wr.writerows(comments)
     
-    #pushtomodel(filename)
-    return filename
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=stockitems_misuper.csv'
+    
+    return response
+
+    # # Handle 0 comments issue
+    # if len(comments) == 0:
+    #     return
+
+    # header = comments[0].keys()
+
+    # if channelID and videoID:
+    #     #filename = f'{PATH}comments_{channelID}_{videoID}_{today}.csv'
+    #     filename = f'{PATH}comments.csv'
+    # elif channelID:
+    #     #filename = f'{PATH}comments_{channelID}_{today}.csv'
+    #     filename = f'{PATH}comments.csv'
+    # else:
+    #     #filename = f'{PATH}comments_{today}.csv'
+    #     filename = f'{PATH}comments.csv'
+
+    # with open(filename, 'w', encoding='utf8', newline='') as f:
+    #     writer = csv.DictWriter(f, fieldnames=header)
+    #     writer.writeheader()
+    #     writer.writerows(comments)  
+    
+    # #pushtomodel(filename)
+    # return filename
 
 
 def pushtomodel(filename):
